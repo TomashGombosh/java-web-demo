@@ -127,6 +127,7 @@ public abstract class AbstractServicePage {
                         StaleElementReferenceException.class,
                         WebDriverException.class));
         wait.until(new Function<WebDriver, WebElement>() {
+            @Override
             public WebElement apply(final WebDriver input) {
                 return input.findElement(element);
             }

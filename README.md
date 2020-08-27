@@ -43,8 +43,11 @@
  * Go to the checkout folder using ``cd java-web-test-demo``
  * Start test using command for Windows: ``mvnw.cmd clean test`` for macOS: ``./mvnw clean test``
  * After test finished to generate the report using next command for Windows ``mvnw.cmd allureReport && mvnw.cmd allureServe`` 
- for macOS: ``./mvnw allureReport && ./mvnw allureServe``  
+ for macOS: ``./mvnw allure:report && ./mvnw mvn allure:serve``  
  
  ## Run on the Team City
  * Go to the [Team City server](http://134.249.164.109/)
  * Login to the server (*To get credential to the server please contact [me](https://github.com/TomashGombosh)*)
+ * Open *Web e2e test Build and Test* under **AFJ Solution** project
+ * Click Run
+ * To see report go to `Build > Artifacts > Collapse allure-report.zip > Click on the index.html`
