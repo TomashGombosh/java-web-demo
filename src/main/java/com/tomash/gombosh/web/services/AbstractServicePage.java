@@ -1,10 +1,10 @@
 package com.tomash.gombosh.web.services;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Function;
 import lombok.extern.log4j.Log4j;
@@ -37,7 +37,7 @@ public abstract class AbstractServicePage {
         this.enterText(pageElement, text, true);
     }
 
-    public void enterText(final PageElement pageElement, String text, final boolean clearField) {
+    public void enterText(final PageElement pageElement, final String text, final boolean clearField) {
         log.info("Entering text \"" + text + "\" to element: " + pageElement.getName());
         this.find(pageElement).click();
         if (clearField) {
@@ -60,15 +60,15 @@ public abstract class AbstractServicePage {
     }
 
     public List<PageElement> getElements() {
-        final List<PageElement> elements = new ArrayList<PageElement>();
+        final List<PageElement> elements = new ArrayList<>();
         for (final Field field : this.getClass().getDeclaredFields()) {
             if (field.getType().getSimpleName().equals("PageElement")) {
                 try {
                     field.setAccessible(true);
                     elements.add((PageElement) field.get(PageElement.class));
                     field.setAccessible(false);
-                } catch (IllegalAccessException ignored) {
-                    System.out.println(ignored.toString());
+                } catch (IllegalAccessException e) {
+                    log.error("Exception log", e);
                 }
             }
         }
@@ -76,7 +76,7 @@ public abstract class AbstractServicePage {
     }
 
     public List<PageElement> getRequiredElements() {
-        final ArrayList<PageElement> requiredElements = new ArrayList<PageElement>();
+        final ArrayList<PageElement> requiredElements = new ArrayList<>();
         for (final PageElement ele : this.getElements()) {
             if (ele.isRequired()) {
                 requiredElements.add(ele);
@@ -85,8 +85,8 @@ public abstract class AbstractServicePage {
         return requiredElements;
     }
 
-    public ArrayList<PageElement> getMissingRequiredElements(List<PageElement> requiredElements) {
-        final ArrayList<PageElement> elements = new ArrayList<PageElement>(requiredElements);
+    public List<PageElement> getMissingRequiredElements(final List<PageElement> requiredElements) {
+        final List<PageElement> elements = new ArrayList<>(requiredElements);
         for (final PageElement ele : requiredElements) {
             if (this.isElementPresent(ele)) {
                 elements.remove(ele);
@@ -118,16 +118,16 @@ public abstract class AbstractServicePage {
     }
 
     public void waitToBeVisible(final By element, final int timeout) {
-        Wait<WebDriver> wait = new FluentWait<WebDriver>(this.driver)
-                .withTimeout(timeout, TimeUnit.SECONDS)
-                .pollingEvery(1, TimeUnit.SECONDS)
+        final Wait<WebDriver> wait = new FluentWait<>(this.driver)
+                .withTimeout(Duration.ofSeconds(5))
+                .pollingEvery(Duration.ofSeconds(1))
                 .ignoreAll(Arrays.asList(
                         ElementNotVisibleException.class,
                         NoSuchElementException.class,
                         StaleElementReferenceException.class,
                         WebDriverException.class));
         wait.until(new Function<WebDriver, WebElement>() {
-            public WebElement apply(WebDriver input) {
+            public WebElement apply(final WebDriver input) {
                 return input.findElement(element);
             }
         });

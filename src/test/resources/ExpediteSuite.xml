@@ -7,13 +7,13 @@
 
     <test name="Login Tests">
         <classes>
-            <class name="com.tomash.gombosh.web.tests.LoginTests"/>
+            <class name="com.tomash.gombosh.web.tests.LoginTest"/>
         </classes>
     </test>
 
     <test name="Logout Tests">
         <classes>
-            <class name="com.tomash.gombosh.web.tests.LogoutTests"/>
+            <class name="com.tomash.gombosh.web.tests.LogoutTest"/>
         </classes>
     </test>
 </suite>

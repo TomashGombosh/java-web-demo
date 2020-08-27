@@ -19,7 +19,7 @@ public class MyAccountPage extends AbstractServicePage {
             By.cssSelector(".logout"),
             true);
 
-    public MyAccountPage(WebDriver driver) {
+    public MyAccountPage(final WebDriver driver) {
         super(driver);
     }
 

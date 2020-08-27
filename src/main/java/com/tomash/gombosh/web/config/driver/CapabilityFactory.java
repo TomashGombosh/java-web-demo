@@ -1,12 +1,13 @@
 package com.tomash.gombosh.web.config.driver;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -22,7 +23,7 @@ import com.tomash.gombosh.web.services.Factory;
 @Accessors(chain = true)
 public class CapabilityFactory implements Factory<DesiredCapabilities, CapabilityFactory> {
     private Browsers browsers = Browsers.CHROME;
-    private boolean headless = false;
+    private boolean headless;
 
     @Override
     public DesiredCapabilities create() {
@@ -41,16 +42,19 @@ public class CapabilityFactory implements Factory<DesiredCapabilities, Capabilit
     }
 
     private DesiredCapabilities getChromeCapabilities() {
-       final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 
-        ChromeOptions chOptions = new ChromeOptions();
-        Map<String, Object> chromePreferences = new HashMap<String, Object>();
+        final ChromeOptions chOptions = new ChromeOptions();
+        final Map<String, Object> chromePreferences = new ConcurrentHashMap<>();
 
         chromePreferences.put("credentials_enable_service", false);
         chOptions.setExperimentalOption("prefs", chromePreferences);
         chOptions.addArguments("--disable-plugins",
                 "--disable-extensions",
                 "--disable-popup-blocking");
+        if (headless) {
+            chOptions.addArguments("--headless");
+        }
 
         capabilities.setCapability(ChromeOptions.CAPABILITY, chOptions);
         capabilities.setCapability("applicationCacheEnable", false);
@@ -60,8 +64,13 @@ public class CapabilityFactory implements Factory<DesiredCapabilities, Capabilit
     private DesiredCapabilities getFirefoxCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
 
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
+        final FirefoxProfile firefoxProfile = new FirefoxProfile();
 
+        if (headless) {
+            final FirefoxOptions firefoxOptions = new FirefoxOptions();
+            firefoxOptions.addArguments("--headless");
+            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+        }
         firefoxProfile.setPreference("browser.autofocus", true);
         firefoxProfile.setPreference("dom.disable_open_during_load", false);
         capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
@@ -72,7 +81,7 @@ public class CapabilityFactory implements Factory<DesiredCapabilities, Capabilit
     private DesiredCapabilities getInternetExplorerCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 
-        InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+        final InternetExplorerOptions ieOptions = new InternetExplorerOptions();
 
         ieOptions.requireWindowFocus();
         ieOptions.merge(capabilities);
@@ -83,7 +92,7 @@ public class CapabilityFactory implements Factory<DesiredCapabilities, Capabilit
     private DesiredCapabilities getSafariCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.safari();
 
-        SafariOptions safariOptions = new SafariOptions();
+        final SafariOptions safariOptions = new SafariOptions();
 
         capabilities.setCapability(SafariOptions.CAPABILITY, safariOptions);
         capabilities.setCapability("autoAcceptAlerts", true);

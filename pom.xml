@@ -4,11 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Enter your project name here -->
     <groupId>com.gombosh.tomash</groupId>
     <artifactId>web</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
 
     <name>Web automation end-to-end tests</name>
     <url>http://maven.apache.org</url>
@@ -33,7 +31,6 @@
         <maven.compiler.version>3.8.0</maven.compiler.version>
         <maven.checkstyle.version>3.1.0</maven.checkstyle.version>
         <maven.pmd.version>3.12.0</maven.pmd.version>
-        <maven.xml.version>1.0.2</maven.xml.version>
         <maven.surefire.version>3.0.0-M5</maven.surefire.version>
     </properties>
 
@@ -91,6 +88,13 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>
+                    src/test/resources
+                </directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -99,6 +103,32 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/ExpediteSuite.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <systemProperties>
+                        <property>
+                            <name>allure.results.directory</name>
+                            <value>${project.build.directory}/allure-results</value>
+                        </property>
+                        <systemPropertyVariables>
+                            <base.url>${base.url}</base.url>
+                            <base.user>${base.user}</base.user>
+                            <base.user.password>${base.user.password}</base.user.password>
+                            <browser>${browser}</browser>
+                        </systemPropertyVariables>
+                    </systemProperties>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
                 </configuration>
             </plugin>
             <plugin>
@@ -143,32 +173,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
-                <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>allure.results.directory</name>
-                            <value>${project.build.directory}/allure-results</value>
-                        </property>
-                        <systemPropertyVariables>
-                            <base.url>${base.url}</base.url>
-                            <base.user>${base.user}</base.user>
-                            <base.user.password>${base.user.password}</base.user.password>
-                            <browser>${browser}</browser>
-                        </systemPropertyVariables>
-                    </systemProperties>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/ExpediteSuite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                    <testFailureIgnore>false</testFailureIgnore>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>io.qameta.allure</groupId>

@@ -20,7 +20,7 @@ public final class Utils {
         try {
             log.info(String.format("Wait %s", seconds));
             Thread.sleep(seconds * 1000);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             log.error("Exception log", e);
         }
     }

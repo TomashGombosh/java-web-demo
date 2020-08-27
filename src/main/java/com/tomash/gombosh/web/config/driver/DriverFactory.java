@@ -70,9 +70,9 @@ public class DriverFactory implements Factory<WebDriver, DriverFactory> {
         if (getSystemName().contains("Win")) {
             firefoxDriverPath = String.format("%s/src/main/resources/drivers/windows/geckodriver.exe", System.getProperty("user.dir"));
         } else if (getSystemName().contains("Mac")) {
-            firefoxDriverPath = String.format("%s/src/main/resources/drivers/mac/geckodriver.exe", System.getProperty("user.dir"));
+            firefoxDriverPath = String.format("%s/src/main/resources/drivers/mac/geckodriver", System.getProperty("user.dir"));
         } else {
-            firefoxDriverPath = String.format("%s/src/main/resources/drivers/linux/geckodriver.exe", System.getProperty("user.dir"));
+            firefoxDriverPath = String.format("%s/src/main/resources/drivers/linux/geckodriver", System.getProperty("user.dir"));
         }
         System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
     }

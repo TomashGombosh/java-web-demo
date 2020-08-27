@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 /**
  * @author Tomash Gombosh
  */
-public class LoginTests extends BaseTest {
+public class LoginTest extends BaseTest {
 
     @Test(description = "Login by Default user")
     public void loginByDefaultUser() {

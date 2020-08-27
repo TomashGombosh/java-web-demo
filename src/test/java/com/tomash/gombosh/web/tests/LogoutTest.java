@@ -8,7 +8,7 @@ import static com.tomash.gombosh.web.utils.ApplicationProperties.BASE_URL;
 /**
  * @author Tomash Gombosh
  */
-public class LogoutTests extends BaseTest {
+public class LogoutTest extends BaseTest {
     @BeforeMethod
     private void login() {
         homePage.clickSignIn();
